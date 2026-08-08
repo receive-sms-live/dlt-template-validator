@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRAI Variable Pre-Tagging Rules for SMS DLT Templates — 2026 Guide</title>
+<meta name="description" content="What TRAI's 18 November 2025 direction on SMS content template variable pre-tagging actually requires: the six official tags (#numeric#, #url#, #urlott#, #cbn#, #email#, #alphanumeric#), the compliance timeline, and how to migrate existing DLT templates.">
+<link rel="canonical" href="https://receive-sms-live.github.io/dlt-template-validator/variable-tagging/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TRAI Variable Pre-Tagging Rules for SMS DLT Templates — 2026 Guide">
+<meta property="og:description" content="The six official TRAI variable tags for DLT content templates, the compliance timeline, and how to migrate existing templates before messages get rejected.">
+<meta property="og:url" content="https://receive-sms-live.github.io/dlt-template-validator/variable-tagging/">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "TRAI Variable Pre-Tagging Rules for SMS DLT Templates",
+  "url": "https://receive-sms-live.github.io/dlt-template-validator/variable-tagging/",
+  "datePublished": "2025-11-18",
+  "dateModified": "2026-08-08",
+  "about": "TRAI direction dated 18 November 2025 mandating pre-tagging of variables in SMS content templates",
+  "publisher": { "@type": "Organization", "name": "India SMS DLT Template Validator" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://receive-sms-live.github.io/dlt-template-validator/" },
+    { "@type": "ListItem", "position": 2, "name": "Variable Tagging Rules", "item": "https://receive-sms-live.github.io/dlt-template-validator/variable-tagging/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="brand-badge">DLT</span> India SMS Template Validator</a>
+    <nav class="site-nav">
+      <a href="../">Validator</a>
+      <a href="../guide/">Registration Guide</a>
+      <a href="../variable-tagging/">Variable Tagging (2026)</a>
+      <a href="../faq/">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="../">Home</a> / Variable Tagging Rules</p>
+
+    <section class="hero">
+      <h1>TRAI Variable Pre-Tagging Rules for SMS DLT Content Templates</h1>
+      <p class="lead">
+        A plain-language breakdown of TRAI's direction dated <strong>18 November 2025</strong> mandating
+        pre-tagged, type-validated variables in every SMS content template — what the six official tags are,
+        why the rule exists, the compliance timeline, and how to migrate templates that still use untyped
+        placeholders.
+      </p>
+    </section>
+
+    <article class="content">
+
+      <h2>What the direction actually says</h2>
+      <p>
+        TRAI's variable pre-tagging requirement isn't brand new — the Authority first directed access
+        providers to limit content templates to two (later, with justification, more) variables and to
+        pre-tag each one back in <strong>February and May 2023</strong>. Those earlier directions were never
+        fully implemented. On <strong>18 November 2025</strong>, TRAI issued a fresh direction (under
+        section 13 of the TRAI Act, read with the Telecom Commercial Communications Customer Preference
+        Regulations, 2018) noting that non-implementation directly, and instructing all access providers to
+        enforce pre-tagging this time — based on a tag set the Cellular Operators Association of India
+        (COAI) proposed on 5 September 2025 and all access providers, including BSNL, agreed to on
+        17 September 2025.
+      </p>
+      <p>
+        In short: every variable field in a registered content template must now carry a descriptive tag
+        that specifies its content type, purpose and validation rule — and operators are required to
+        scrub/validate the actual value sent in that slot against the declared type before delivering the
+        message.
+      </p>
+
+      <h2>The six official variable tags (Annexure-I)</h2>
+      <p>Generic, untyped variables are no longer accepted for new templates. Every variable must use one of these six tags:</p>
+      <table>
+        <thead>
+          <tr><th>Tag</th><th>Purpose / example</th><th>Validation rule</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>#numeric#</code> (a.k.a. <code>#number#</code>)</td><td>Digits only — OTPs, amounts, counts</td><td>Digits only; no letters or special characters</td></tr>
+          <tr><td><code>#url#</code></td><td>A web link, e.g. "Track order: #url#"</td><td>Must resolve to a registered CTA under Static, Dynamic or Short URL</td></tr>
+          <tr><td><code>#urlott#</code></td><td>An app/OTT link, e.g. "Download app: #urlott#"</td><td>Must resolve to a registered CTA under OTT or APK link</td></tr>
+          <tr><td><code>#cbn#</code></td><td>A callback number, e.g. "Call #cbn# for support"</td><td>Must match a registered CTA (mobile, landline or toll-free)</td></tr>
+          <tr><td><code>#email#</code></td><td>An email address, e.g. "Write to #email#"</td><td>Must match a valid email pattern</td></tr>
+          <tr><td><code>#alphanumeric#</code></td><td>Mixed IDs — booking/ticket/order numbers</td><td>Letters + numbers only; length-checked</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Two notation styles show up in the wild: the bare form TRAI's own Annexure-I uses
+        (<code>#numeric#</code>) and the curly-brace form most operator DLT portals display
+        (<code>{#numeric#}</code>). This validator's <a href="../">template checker</a> accepts either.
+      </p>
+      <p class="source-note">
+        Primary source: TRAI Direction dated 18 November 2025, F.No. D-2711/(2)/2024-QoS (E-13563), and the
+        accompanying
+        <a href="https://trai.gov.in/notifications/press-release/trai-issues-direction-mandate-pre-tagging-variables-sms-content" target="_blank" rel="noopener">press release</a>.
+      </p>
+
+      <h2>Compliance timeline</h2>
+      <table>
+        <thead><tr><th>Milestone</th><th>Deadline</th></tr></thead>
+        <tbody>
+          <tr><td>Direction issued</td><td>18 November 2025</td></tr>
+          <tr><td>All <em>new</em> content templates must be pre-tagged per Annexure-I</td><td>Templates registered from ~10 days after issuance (late Nov 2025) onward</td></tr>
+          <tr><td>Access providers begin scrubbing/validating tagged variables against whitelisted URLs/OTT links/APKs/callback numbers</td><td>Within 30 days of issuance (~mid-December 2025)</td></tr>
+          <tr><td>"Logger mode" grace period — non-compliant messages still delivered, faults only logged</td><td>First 60 days of scrubbing (~mid-February 2026)</td></tr>
+          <tr><td>Enforcement — messages failing variable-tag validation are rejected outright</td><td>From the end of the 60-day logger-mode window</td></tr>
+          <tr><td>Updated Code of Practice due from access providers</td><td>Within 90 days of issuance</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The logger-mode grace period has already lapsed, so as of today, outright rejection of
+        non-compliant messages is the enforced default — there's no more "warn but deliver" fallback for
+        untyped or mistyped variables.
+      </p>
+
+      <h2>How to migrate an existing template</h2>
+      <ol>
+        <li>Pull every content template you currently have registered on your operator's DLT portal (or your CPaaS/SMS gateway's DLT dashboard).</li>
+        <li>For each variable slot, decide which of the six tags actually describes the data — an OTP is <code>#numeric#</code>, a tracking link is <code>#url#</code>, a support number is <code>#cbn#</code>, and so on.</li>
+        <li>Re-submit the updated template for approval through your content template registrar; approval typically takes about two working days.</li>
+        <li>Update the message-construction code in your application or SMS gateway integration so the value it drops into each slot actually matches the declared type — a numeric-tagged slot should never receive a string with letters in it.</li>
+        <li>Before going live, paste the updated template and a sample real message into the <a href="../">DLT template validator</a> to confirm the structure and variable types line up.</li>
+      </ol>
+
+      <h2>Common mistakes that now cause rejection</h2>
+      <p>
+        Using a generic, untyped placeholder instead of one of the six tags is the most common one — those
+        are simply no longer accepted on new templates. Right behind it: putting two variables back-to-back
+        with no static text between them (only <code>#alphanumeric#</code> is allowed to sit next to another
+        tag without a separator), sending a URL that isn't on your registered CTA whitelist, and exceeding
+        the per-tag length limits most operators enforce during scrubbing (commonly 40 characters for
+        numeric/alphanumeric/email tags, 120 for URL tags).
+      </p>
+
+      <div class="callout">
+        <h3>Validate before you register</h3>
+        <p>
+          Paste your updated, tagged template and a real sample message into the validator to catch
+          structural and type mismatches before you submit it — or before your operator's scrubber rejects
+          live traffic.
+          <a class="cta" href="../#validator">Open the validator →</a>
+        </p>
+      </div>
+
+      <div class="callout">
+        <h3>Testing OTP delivery on a real number</h3>
+        <p>
+          To see how a newly tagged template actually renders once delivered, you can receive the test SMS
+          on a free temporary Indian number instead of your own.
+          <a class="cta" href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online at receive-smss.live →</a>
+        </p>
+      </div>
+
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>India SMS DLT Template Validator</h4>
+        <p>A free, client-side checker for TRAI DLT content template compliance.</p>
+      </div>
+      <div>
+        <h4>Tool</h4>
+        <ul>
+          <li><a href="../">Validator</a></li>
+          <li><a href="../guide/">Registration guide</a></li>
+          <li><a href="../variable-tagging/">Variable tagging rules</a></li>
+          <li><a href="../faq/">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://trai.gov.in/notifications/press-release/trai-issues-direction-mandate-pre-tagging-variables-sms-content" target="_blank" rel="noopener">TRAI press release (source)</a></li>
+          <li><a href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online (India numbers)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      This is an independent, unofficial explainer and is not affiliated with TRAI, DoT, or any telecom
+      operator. Always confirm current rules and deadlines directly on trai.gov.in and with your DLT
+      operator before making compliance decisions.
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/validator.js"></script>
+</body>
+</html>
