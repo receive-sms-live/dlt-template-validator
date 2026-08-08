@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>India SMS DLT FAQ — Template Matching, Variable Tagging, PE ID, SMS Segments</title>
+<meta name="description" content="Answers to common questions about India's TRAI DLT SMS rules: why templates get rejected, what PE ID/Header/Content Template ID mean, the 2026 variable pre-tagging tags, and GSM-7 vs Unicode SMS segment limits.">
+<link rel="canonical" href="https://receive-sms-live.github.io/dlt-template-validator/faq/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="India SMS DLT FAQ">
+<meta property="og:description" content="Common questions about TRAI DLT template matching, variable pre-tagging, PE ID/Header/Content Template ID, and SMS segment limits — answered.">
+<meta property="og:url" content="https://receive-sms-live.github.io/dlt-template-validator/faq/">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does my DLT-registered SMS template keep getting rejected or not delivered?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The most common reasons are: the live message text no longer matches the registered template's fixed wording exactly, a variable value doesn't match its declared type under TRAI's pre-tagging rules, a URL or callback number isn't on your registered CTA whitelist, or the PE ID / Header / Content Template ID sent with the message doesn't line up with what's registered." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a PE ID in DLT registration?",
+      "acceptedAnswer": { "@type": "Answer", "text": "PE ID stands for Principal Entity ID — a unique identifier assigned to your business when you register as a sender on a telecom operator's DLT platform. It must be included in every SMS API payload alongside the Header and Content Template ID." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a Content Template ID?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It's the identifier assigned to a specific approved SMS content template after the content template registrar reviews and approves it. Every message you send is checked against the registered template for the Content Template ID you supply." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the [VARIABLE] bracket format still accepted in DLT templates?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Many operator portals still display it, but TRAI's November 2025 direction requires new templates to use one of six typed tags instead of a generic placeholder: #numeric#, #url#, #urlott#, #cbn#, #email#, or #alphanumeric# (also shown as {#numeric#} etc. on some portals)." }
+    },
+    {
+      "@type": "Question",
+      "name": "How many characters fit in one SMS segment?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A single GSM-7 encoded SMS holds up to 160 characters; if it needs to be split into multiple concatenated segments, each part holds 153 characters. A Unicode SMS (needed for scripts like Hindi/Devanagari, or emoji) holds up to 70 characters single-segment, or 67 per part when concatenated." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did my SMS switch from GSM-7 to Unicode and cost more segments?",
+      "acceptedAnswer": { "@type": "Answer", "text": "As soon as a message contains even one character outside the GSM 7-bit default alphabet and extension table — for example an emoji, a smart/curly quote, an em dash, or non-Latin script — the entire message is sent as Unicode (UCS-2), which drops the per-segment limit from 160 to 70 characters." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this validator check my template against the live TRAI DLT registry?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. There is no public API for that. This tool runs entirely in your browser and only checks template structure, variable typing, and SMS encoding/segments — it does not verify that your PE ID, Header, or Content Template ID are actually registered. Confirm those directly on your operator's DLT portal." }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I add extra text to an approved template, like a promo line?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Any text not part of the registered template — even a single appended sentence — breaks the structural match, and the operator's DLT scrubber will typically reject the message. Extra content has to be registered as part of the template itself (or as a separate approved template)." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can two variables sit next to each other with no text between them?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Generally no — under the current tagging rules, only #alphanumeric# is allowed to sit directly next to another variable tag without static text in between. Every other tag combination needs some fixed wording separating the variables." }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does DLT content template approval take?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Typically around two working days once submitted to the content template registrar, though this can vary by operator and template complexity." }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://receive-sms-live.github.io/dlt-template-validator/" },
+    { "@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://receive-sms-live.github.io/dlt-template-validator/faq/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="brand-badge">DLT</span> India SMS Template Validator</a>
+    <nav class="site-nav">
+      <a href="../">Validator</a>
+      <a href="../guide/">Registration Guide</a>
+      <a href="../variable-tagging/">Variable Tagging (2026)</a>
+      <a href="../faq/">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="../">Home</a> / FAQ</p>
+
+    <section class="hero">
+      <h1>India SMS DLT — Frequently Asked Questions</h1>
+      <p class="lead">Template matching, variable pre-tagging, PE ID/Header/Content Template ID, and SMS encoding — answered.</p>
+    </section>
+
+    <article class="content">
+
+      <div class="faq-item">
+        <h3>Why does my DLT-registered SMS template keep getting rejected or not delivered?</h3>
+        <p>The most common reasons: the live message text no longer matches the registered template's fixed wording exactly, a variable value doesn't match its declared type under TRAI's pre-tagging rules, a URL or callback number isn't on your registered CTA whitelist, or the PE ID / Header / Content Template ID sent with the message doesn't line up with what's registered. Run the message and template through the <a href="../">validator</a> to check the first two instantly.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is a PE ID in DLT registration?</h3>
+        <p>Principal Entity ID — a unique identifier assigned to your business when you register as a sender on a telecom operator's DLT platform. It has to be included in every SMS API payload alongside the Header and Content Template ID.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What is a Content Template ID?</h3>
+        <p>The identifier assigned to a specific SMS content template once the content template registrar approves it. Every outgoing message is checked against the registered template tied to the Content Template ID you supply in the payload.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Is the [VARIABLE] bracket format still accepted in DLT templates?</h3>
+        <p>Many operator portals still display it, but TRAI's direction dated 18 November 2025 requires new templates to use one of six typed tags instead of a generic placeholder: <code>#numeric#</code>, <code>#url#</code>, <code>#urlott#</code>, <code>#cbn#</code>, <code>#email#</code>, or <code>#alphanumeric#</code> (also shown as <code>{#numeric#}</code> etc. on some portals). See the <a href="../variable-tagging/">full breakdown</a>.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How many characters fit in one SMS segment?</h3>
+        <p>A single GSM-7 encoded SMS holds up to 160 characters; split across multiple concatenated segments, each part holds 153 characters. A Unicode SMS (needed for Devanagari/other non-Latin scripts, or emoji) holds up to 70 characters single-segment, or 67 per part when concatenated.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Why did my SMS switch from GSM-7 to Unicode and cost more segments?</h3>
+        <p>As soon as a message contains even one character outside the GSM 7-bit default alphabet and extension table — an emoji, a smart/curly quote, an em dash, or non-Latin script — the entire message is sent as Unicode (UCS-2), dropping the per-segment limit from 160 to 70 characters. The validator flags this under "SMS encoding".</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does this validator check my template against the live TRAI DLT registry?</h3>
+        <p>No — there's no public API for that. Everything runs locally in your browser; it only checks template structure, variable typing, and SMS encoding/segments. It cannot confirm your PE ID, Header, or Content Template ID are actually registered — verify those on your operator's DLT portal.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What happens if I add extra text to an approved template, like a promo line?</h3>
+        <p>Any text not part of the registered template — even one appended sentence — breaks the structural match, and the operator's scrubber will typically reject the message. Extra content needs to be part of the registered template itself, or registered as a separate template.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can two variables sit next to each other with no text between them?</h3>
+        <p>Generally no. Under current tagging rules only <code>#alphanumeric#</code> may sit directly next to another variable tag without static text between them — every other combination needs fixed wording as a separator.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How long does DLT content template approval take?</h3>
+        <p>Typically around two working days once submitted to the content template registrar, though this varies by operator and template complexity.</p>
+      </div>
+
+      <div class="callout">
+        <h3>Still have a template that won't match?</h3>
+        <p>
+          Paste it into the validator and see exactly which check fails.
+          <a class="cta" href="../#validator">Open the validator →</a>
+        </p>
+      </div>
+
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>India SMS DLT Template Validator</h4>
+        <p>A free, client-side checker for TRAI DLT content template compliance.</p>
+      </div>
+      <div>
+        <h4>Tool</h4>
+        <ul>
+          <li><a href="../">Validator</a></li>
+          <li><a href="../guide/">Registration guide</a></li>
+          <li><a href="../variable-tagging/">Variable tagging rules</a></li>
+          <li><a href="../faq/">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://trai.gov.in/" target="_blank" rel="noopener">TRAI official site</a></li>
+          <li><a href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online (India numbers)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      This is an independent, unofficial resource and is not affiliated with TRAI, DoT, or any telecom operator.
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/validator.js"></script>
+</body>
+</html>
