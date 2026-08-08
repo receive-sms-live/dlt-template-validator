@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://receive-sms-live.github.io/dlt-template-validator/sitemap.xml

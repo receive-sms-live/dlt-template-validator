@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>India SMS DLT Template Validator — Check TRAI Content Template Match Free</title>
+<meta name="description" content="Free browser-based tool to validate your India SMS DLT content template against the message you're about to send. Checks fixed-text structure, TRAI's mandatory variable pre-tagging, GSM-7/Unicode encoding and SMS segment count — before your operator's DLT scrubber blocks it.">
+<link rel="canonical" href="https://receive-sms-live.github.io/dlt-template-validator/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="India SMS DLT Template Validator — Check TRAI Content Template Match Free">
+<meta property="og:description" content="Validate a registered DLT content template against your actual SMS text: structure, pre-tagged variable types, GSM-7/Unicode encoding and segment count.">
+<meta property="og:url" content="https://receive-sms-live.github.io/dlt-template-validator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="India SMS DLT Template Validator">
+<meta name="twitter:description" content="Free tool to check your SMS against its registered TRAI DLT content template before sending.">
+
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "India SMS DLT Template Validator",
+  "url": "https://receive-sms-live.github.io/dlt-template-validator/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (browser-based)",
+  "description": "Validates an India SMS DLT registered content template against an actual outgoing message: fixed-text structure, pre-tagged variable types, GSM-7/Unicode encoding and SMS segment estimate.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+  "isAccessibleForFree": true
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://receive-sms-live.github.io/dlt-template-validator/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <span class="brand-badge">DLT</span>
+      India SMS Template Validator
+    </a>
+    <nav class="site-nav">
+      <a href="./">Validator</a>
+      <a href="guide/">Registration Guide</a>
+      <a href="variable-tagging/">Variable Tagging (2026)</a>
+      <a href="faq/">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section class="hero">
+      <h1>India SMS DLT Template Validator</h1>
+      <p class="lead">
+        Paste your <strong>registered TRAI DLT content template</strong> and the <strong>actual SMS text</strong>
+        you're about to send. This tool checks whether the fixed wording still matches the template you
+        registered on the DLT platform, whether variables follow the mandatory pre-tagging rules TRAI introduced
+        for content templates, and estimates SMS encoding and segment count — entirely in your browser, before
+        the message ever reaches an operator's scrubber.
+      </p>
+      <div class="badge-row">
+        <span class="pill">Runs 100% client-side</span>
+        <span class="pill">No data leaves your browser</span>
+        <span class="pill">Free, no signup</span>
+      </div>
+    </section>
+
+    <section class="tool-card" id="validator">
+      <div class="field">
+        <label for="template-input">Registered DLT Content Template
+          <span class="hint">— use <code>[VARIABLE]</code>, or the official TRAI tags <code>#numeric#</code> / <code>{#numeric#}</code>, <code>#url#</code>, <code>#urlott#</code>, <code>#cbn#</code>, <code>#email#</code>, <code>#alphanumeric#</code></span>
+        </label>
+        <textarea id="template-input" placeholder="Dear [VARIABLE], your verification code is [VARIABLE]. Do not share it with anyone."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="message-input">Actual Message to Send</label>
+        <textarea id="message-input" placeholder="Dear Rahul, your verification code is 583921. Do not share it with anyone."></textarea>
+      </div>
+
+      <details class="advanced">
+        <summary>Advanced: DLT metadata (PE ID / Header / Content Template ID) — optional</summary>
+        <p class="hint" style="margin:10px 0 0;">
+          These are basic format sanity checks only. There is no public API to verify a PE ID, Header or
+          Content Template ID against the live TRAI/operator DLT registry, so this does <em>not</em> confirm
+          the IDs are actually registered — only that they're not obviously malformed.
+        </p>
+        <div class="two-col">
+          <div class="field">
+            <label for="pe-id">Principal Entity (PE) ID</label>
+            <input type="text" id="pe-id" placeholder="e.g. 1701xxxxxxxxxxxxx">
+          </div>
+          <div class="field">
+            <label for="header-id">Header / Sender ID</label>
+            <input type="text" id="header-id" placeholder="e.g. AXBANK-T">
+          </div>
+        </div>
+        <div class="field">
+          <label for="content-template-id">Content Template ID</label>
+          <input type="text" id="content-template-id" placeholder="e.g. 1207xxxxxxxxxxx">
+        </div>
+      </details>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button class="btn" id="validate-btn" type="button">Validate Template</button>
+        <button class="btn secondary" id="example-valid" type="button">Load valid example</button>
+        <button class="btn secondary" id="example-mismatch" type="button">Load mismatch example</button>
+        <button class="btn secondary" id="example-typed" type="button">Load typed-tag example</button>
+      </div>
+
+      <div id="result-panel" hidden aria-live="polite">
+        <div class="result-banner" id="result-banner"></div>
+        <ul class="checklist" id="checklist"></ul>
+        <div class="stat-grid" id="stat-grid"></div>
+        <p id="extracted-vars" hidden></p>
+        <div class="meta-note" id="meta-note" hidden></div>
+      </div>
+    </section>
+
+    <div class="callout">
+      <h3>Testing an OTP or verification flow end-to-end?</h3>
+      <p>
+        Once your template validates, you'll often want to see the real SMS land on an actual Indian number
+        without handing out your personal one — useful for QA, demos, or checking how your registered header
+        renders on a handset.
+        <a class="cta" href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive the SMS on a free temporary India number at receive-smss.live →</a>
+      </p>
+    </div>
+
+    <article class="content">
+      <h2>How this validator works</h2>
+      <p>
+        The tool splits your registered template into fixed text and variable slots — either legacy
+        <code>[VARIABLE]</code> placeholders or the typed <code>{#numeric#}</code> / <code>{#var#}</code> /
+        <code>{#url#}</code> tags now expected under TRAI's variable pre-tagging direction. It then checks,
+        in order, that every fixed chunk of text appears unchanged in your actual message, that no extra
+        wording has been inserted or appended, and — when typed tags are used — that each variable's value
+        actually matches its declared type (a numeric OTP variable shouldn't suddenly contain letters, for
+        example). Finally it estimates whether your message will be sent as GSM-7 or Unicode and how many
+        SMS segments that costs you.
+      </p>
+
+      <h2>Why a DLT template mismatch gets your SMS blocked</h2>
+      <p>
+        Every commercial and transactional SMS sent in India has to trace back to a <strong>Principal
+        Entity (PE)</strong> registered on a telecom-operator DLT platform, using a registered
+        <strong>Header (Sender ID)</strong> and a registered <strong>Content Template</strong>. The template
+        registered with the content template registrar defines the exact fixed wording and the position and
+        count of variable fields; operators run every outgoing message through automated matching against
+        that registered template before allowing delivery. If the fixed wording has changed, if variables
+        have moved, or if extra text (a promo line, a different sign-off, a stray link) has been added, the
+        message no longer matches the registered <strong>Content Template ID</strong> and gets rejected by
+        the scrubber — regardless of whether the PE ID and Header passed along in the message are valid.
+      </p>
+
+      <h2 id="pretagging-summary">TRAI's mandatory variable pre-tagging direction (Nov 2025)</h2>
+      <p>
+        On 18 November 2025 TRAI issued a direction mandating that every variable inside an SMS content
+        template be pre-tagged with one of six defined types — <code>#numeric#</code>, <code>#url#</code>,
+        <code>#urlott#</code>, <code>#cbn#</code>, <code>#email#</code> or <code>#alphanumeric#</code> —
+        instead of a generic, untyped placeholder. New templates registered from late November 2025 onward
+        already had to comply; existing templates got a further window to be updated, after which any
+        message whose variable content doesn't match its declared type is rejected outright rather than
+        merely logged. As of today, that grace period has passed, so pre-tagged, type-validated variables
+        are now the enforced norm across access providers.
+        <a href="variable-tagging/">Read the full breakdown, including the exact tag table and compliance timeline →</a>
+      </p>
+      <p class="source-note">
+        Source: <a href="https://trai.gov.in/notifications/press-release/trai-issues-direction-mandate-pre-tagging-variables-sms-content" target="_blank" rel="noopener">TRAI press release — "TRAI issues Direction to Mandate Pre-Tagging of Variables in SMS Content Templates"</a>
+      </p>
+
+      <h2>Registering a Principal Entity, Header and Content Template</h2>
+      <p>
+        Before any template can be validated against real traffic, three things need to exist on your
+        telecom operator's DLT portal: a verified <strong>Principal Entity</strong> profile for your
+        business, a <strong>Header</strong> (the 6-character Sender ID shown instead of a phone number,
+        registered by category), and the <strong>Content Template</strong> itself, which is reviewed and
+        approved by the content template registrar — typically within a couple of working days — before it
+        can carry live traffic. The PE ID, Header and Content Template ID all have to be passed along with
+        every message you send through your SMS gateway.
+        <a href="guide/">See the full step-by-step registration walkthrough →</a>
+      </p>
+
+      <h2>Quick FAQ</h2>
+      <div class="faq-item">
+        <h3>Does this tool submit anything to TRAI or my telecom operator?</h3>
+        <p>No. Everything runs locally in your browser via JavaScript — nothing you type is uploaded anywhere, and this tool has no connection to the DLT registry.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can it tell me if my PE ID or Content Template ID is actually registered?</h3>
+        <p>No — there's no public API for that. It only does basic format sanity checks. Always confirm against your operator's DLT portal.</p>
+      </div>
+      <div class="faq-item">
+        <h3>What variable formats are supported?</h3>
+        <p>The classic <code>[VARIABLE]</code> bracket style most portals still show, plus TRAI's official six tags from Annexure-I of the November 2025 direction — <code>#numeric#</code>, <code>#url#</code>, <code>#urlott#</code>, <code>#cbn#</code>, <code>#email#</code>, <code>#alphanumeric#</code> — in either bare (<code>#numeric#</code>) or curly-brace (<code>{#numeric#}</code>) notation, since portals render them differently.</p>
+      </div>
+      <p><a href="faq/">More questions, answered in detail →</a></p>
+    </article>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>India SMS DLT Template Validator</h4>
+        <p>A free, client-side checker for TRAI DLT content template compliance — built for developers, marketers and DLT operators sending OTP and transactional SMS in India.</p>
+      </div>
+      <div>
+        <h4>Tool</h4>
+        <ul>
+          <li><a href="./">Validator</a></li>
+          <li><a href="guide/">Registration guide</a></li>
+          <li><a href="variable-tagging/">Variable tagging rules</a></li>
+          <li><a href="faq/">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://trai.gov.in/" target="_blank" rel="noopener">TRAI official site</a></li>
+          <li><a href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online (India numbers)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      This is an independent, unofficial tool and is not affiliated with TRAI, DoT, or any telecom operator.
+      It performs local text/format checks only and does not query the live DLT registry — it is not a
+      substitute for verifying your template, PE ID, Header and Content Template ID directly on your
+      operator's DLT portal.
+    </div>
+  </div>
+</footer>
+
+<script src="assets/validator.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
