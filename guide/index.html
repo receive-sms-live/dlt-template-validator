@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DLT Registration Guide: Principal Entity, Header & Content Template (India SMS)</title>
+<meta name="description" content="Step-by-step guide to registering a Principal Entity (PE), Header (Sender ID) and Content Template on India's TRAI DLT platform for sending OTP and transactional SMS, including the PE ID/Header/Content Template ID payload requirement.">
+<link rel="canonical" href="https://receive-sms-live.github.io/dlt-template-validator/guide/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DLT Registration Guide: Principal Entity, Header & Content Template">
+<meta property="og:description" content="How PE registration, Header (Sender ID) and Content Template registration fit together on India's TRAI DLT platform, and what has to go in every SMS payload.">
+<meta property="og:url" content="https://receive-sms-live.github.io/dlt-template-validator/guide/">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to register a Principal Entity, Header and Content Template for India SMS DLT",
+  "step": [
+    { "@type": "HowToStep", "name": "Register as a Principal Entity", "text": "Sign up on your telecom operator's DLT portal, submit KYC/business documents, and complete verification to receive a PE ID." },
+    { "@type": "HowToStep", "name": "Register a Header (Sender ID)", "text": "Register a 6-character Sender ID under the correct consent category; operators append an automatic category suffix (-P/-S/-T/-G) from 6 May 2025." },
+    { "@type": "HowToStep", "name": "Register a Content Template", "text": "Submit the exact fixed wording and pre-tagged variables for approval by the content template registrar to receive a Content Template ID." },
+    { "@type": "HowToStep", "name": "Send messages with PE ID, Header and Content Template ID", "text": "Pass all three identifiers in every SMS API payload so the operator's DLT scrubber can match and deliver the message." }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://receive-sms-live.github.io/dlt-template-validator/" },
+    { "@type": "ListItem", "position": 2, "name": "Registration Guide", "item": "https://receive-sms-live.github.io/dlt-template-validator/guide/" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="brand-badge">DLT</span> India SMS Template Validator</a>
+    <nav class="site-nav">
+      <a href="../">Validator</a>
+      <a href="../guide/">Registration Guide</a>
+      <a href="../variable-tagging/">Variable Tagging (2026)</a>
+      <a href="../faq/">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <p class="breadcrumb"><a href="../">Home</a> / Registration Guide</p>
+
+    <section class="hero">
+      <h1>DLT Registration Guide: Principal Entity, Header &amp; Content Template</h1>
+      <p class="lead">
+        Every legitimate commercial or transactional SMS sent in India has to trace back to three things
+        registered on a telecom operator's DLT (Distributed Ledger Technology) platform: a
+        <strong>Principal Entity</strong>, a <strong>Header</strong>, and a <strong>Content Template</strong>.
+        Here's how the three fit together and what to register, in order.
+      </p>
+    </section>
+
+    <article class="content">
+
+      <h2>1. Register as a Principal Entity (PE)</h2>
+      <p>
+        A Principal Entity is the business or organisation sending the messages — a bank, an e-commerce
+        platform, a hospital, a SaaS product. Registration happens on any one telecom operator's DLT portal
+        (Airtel, Jio, Vi and BSNL each run one; registering with one operator is generally enough since the
+        DLT ecosystem is interconnected). You'll typically submit company KYC documents (PAN, GST/CIN,
+        authorised signatory details) for verification. Once approved, you receive a <strong>PE ID</strong> —
+        a unique identifier for your business across the entire DLT ecosystem, not just that one operator.
+      </p>
+
+      <h2>2. Register a Header (Sender ID)</h2>
+      <p>
+        A Header — commonly called a Sender ID — is the short name recipients see instead of a phone number
+        (e.g. <code>AXBANK</code>). Headers are typically 6 characters and must be registered under the
+        correct consent category: Transactional, Service (Implicit/Explicit), Promotional, or Government.
+        Since <strong>6 May 2025</strong>, operators automatically append a one-letter category suffix to
+        every header at delivery time — <code>-T</code> for transactional, <code>-S</code> for service,
+        <code>-P</code> for promotional, <code>-G</code> for government — so recipients can see at a glance
+        what kind of message they're getting. You don't set this suffix yourself; it's applied based on
+        which category your content template is registered under.
+      </p>
+
+      <h2>3. Register a Content Template</h2>
+      <p>
+        The Content Template is the exact message you intend to send, with variable portions marked out —
+        for example <code>Dear [VARIABLE], your OTP is [VARIABLE].</code> or, under the current pre-tagging
+        rules, <code>Dear #alphanumeric#, your OTP is #numeric#.</code> You submit this to a content
+        template registrar (part of the operator's DLT platform); it's typically reviewed and
+        approved or rejected within about two working days. Once approved, it gets a
+        <strong>Content Template ID</strong>. See the
+        <a href="../variable-tagging/">variable pre-tagging guide</a> for the current rules on which
+        variable tags are accepted.
+      </p>
+
+      <h2>4. Send messages with PE ID, Header and Content Template ID</h2>
+      <p>
+        Your SMS gateway/API payload has to carry all three identifiers alongside the message text: the
+        <strong>PE ID</strong>, the <strong>Header</strong> (Sender ID) used, and the
+        <strong>Content Template ID</strong> the outgoing text is supposed to match. The operator's DLT
+        scrubber checks that the message text structurally matches the registered template for that
+        Content Template ID, that the Header belongs to your PE, and that variable values match their
+        declared types — and only then delivers the message. A mismatch on any of those checks is the most
+        common reason a perfectly well-intentioned transactional SMS silently fails to arrive.
+      </p>
+
+      <h2>Common rejection reasons</h2>
+      <p>
+        In practice, most rejections trace back to one of: the live message text no longer matching the
+        registered template word-for-word (a copywriter tweaked the wording after registration), untyped or
+        wrong-typed variables under the current pre-tagging rules, a URL or callback number that isn't on
+        the registered CTA whitelist, or a Header/PE ID/Content Template ID mismatch in the API payload
+        itself. The <a href="../">template validator</a> on this site catches the first two before you ever
+        send a message.
+      </p>
+
+      <div class="callout">
+        <h3>Check your template before you register — or before you send</h3>
+        <p>
+          Paste your registered template and the exact message text into the validator to confirm they
+          still match, and to check SMS encoding and segment count.
+          <a class="cta" href="../#validator">Open the validator →</a>
+        </p>
+      </div>
+
+      <div class="callout">
+        <h3>Need to see the delivered SMS on a real number?</h3>
+        <p>
+          For QA or demos, you can receive the test message on a free temporary Indian number instead of a
+          personal one.
+          <a class="cta" href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online at receive-smss.live →</a>
+        </p>
+      </div>
+
+    </article>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>India SMS DLT Template Validator</h4>
+        <p>A free, client-side checker for TRAI DLT content template compliance.</p>
+      </div>
+      <div>
+        <h4>Tool</h4>
+        <ul>
+          <li><a href="../">Validator</a></li>
+          <li><a href="../guide/">Registration guide</a></li>
+          <li><a href="../variable-tagging/">Variable tagging rules</a></li>
+          <li><a href="../faq/">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://trai.gov.in/" target="_blank" rel="noopener">TRAI official site</a></li>
+          <li><a href="https://receive-smss.live/sms/in" target="_blank" rel="noopener">Receive SMS online (India numbers)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      This is an independent, unofficial guide and is not affiliated with TRAI, DoT, or any telecom
+      operator. Registration steps and portal names vary by operator — always confirm current requirements
+      on your chosen operator's DLT portal.
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/validator.js"></script>
+</body>
+</html>
